@@ -7,7 +7,7 @@
     <title>Arrow Functions</title>
 </head>
 <body id="body">
-    <h1>My Boring Website</h1>
+    <h1>Mi mensaje es:   <span id="mensaje"></span></h1>
     <p id="paragraph">
         This website is boring, with very little CSS. 
         However, we really just care about the javascript. 
@@ -52,7 +52,31 @@
             const color =   document.querySelector('#input-color').value
             p_color.style['background-color']  =   color
         }
+        function init ()    {
+            const mensaje =   document.querySelector('#mensaje')
+            const h1    =   document.querySelector('h1')
         
+            setInterval(
+                function() {
+                    //cambiamos el texto
+                    if (mensaje.innerHTML ==  'No se')    {
+                        mensaje.innerHTML ==  'Ni me interesa'
+                    }
+                    else    {
+                        mensaje.innerHTML =   'No se'
+                    }
+                    // cambiamos color
+                    const red   =   Math.floor(Math.random() *  256)
+                    const green   =   Math.floor(Math.random() *  256)
+                    const blue   =   Math.floor(Math.random() *  256)
+
+                    h1.style['background-color']    =   'rgb('+red+' , '+green+' , '+blue+')'
+                }
+                1000
+            )
+        }
+        init()
+
     </script>
 </body>
 </html>
