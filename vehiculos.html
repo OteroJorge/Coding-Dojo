@@ -62,8 +62,13 @@
         </div>
         <div class="col-4">
                 <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <h5 class="card-title" id="nombre">Card title</h5>
+                 <ul>
+                  <li><strong>Altura</strong><span id= "altura"></span> </li>
+                  <li><strong>Planeta Natal</strong><span id= "planeta_natal"></span> </li>
+                  <li><strong>Primera Película</strong><span id= "primera_pelicula"></span> </li>
+                
+                 </ul>
                   <a href="#" class="btn btn-primary">Go somewhere</a>
                 </div>
               </div>
@@ -82,7 +87,7 @@
         }
         init();
 
-        function buscar ()  {
+        async function buscar ()  {
             // 1. Recuperamos la ID que ingresó el usuario
             let id = document.querySelector('#id').value.trim()
             id = parseInt(id)
@@ -93,7 +98,9 @@
                 return
             }
             // 3. Vamos a buscar la info del personaje
-            $.get(
+            // Solución con CALLBACKS HEIL
+            
+        /*     $.get(
                 'https://swapi.dev/api/people/' + id, function (persona) {
                     console.log(persona)
                     $.get(persona.homeworld, function (planeta)  {
@@ -104,12 +111,39 @@
                     })
 
                 }
-            )
-            console.log('Buscando al personaje de ID ' + id)
+            )  */
+            // Solución con PROMESAS: Son solicitudes asíncronas que pueden estar en tres estados: PENDING, COMPLETE, FAILURE.
+            // Vamos a ocupar otro método para traer información: FETCH -> Es igual que al get, yo le paso una info que puede ser una dirección htpps y le paso la redacción. El Fetch es exactamente igual, con la diferencia que  el Fetch devuelve una promesa y, por lo tanto, queda Pending. Y para esperar que se resuelvay la pag no se pegue,uso await y declaro a la función buscar como asíncrona (async function buscar()). EL único problema del FETCH es que hay que desempaquetar, por eso usamos variable LET y no CONST.
+          let persona = await fetch('https://swapi.dev/api/people/' + id)
+            // Desempaquetamos y transformamos en objeto manipulable.
+          persona = await persona.json() // Ademas de desempaquetar, lo e hace ese codiqo es transformar la variable en un objeto que podamos manipular (parciar).
+
+          let planeta = await fetch(persona.homeworld)
+          planeta = await planeta.json() // Ademas de desempaquetar, lo e hace ese codiqo es transformar la variable en un objeto que podamos manipular (parciar).
+
+          let pelicula = await fetch(planeta.films[0])
+          pelicula  = await pelicula.json() // Ademas de desempaquetar, lo e hace ese codiqo es transformar la variable en un objeto que podamos manipular (parciar).
+
+          console.log(persona, planeta, pelicula)
+          dibujarDOM(persona, planeta, pelicula)
+
+        } // Acá termina la función buscar
+
+        function dibujarDOM (persona, planeta, pelicula) {
+          // 1. Otengo los elementos que quiero llenar con información
+          const nombre = document.querySelector('#nombre')
+          const altura = document.querySelector('#altura')
+          const planeta_natal = document.querySelector('#planeta_natal')
+          const primera_pelicula = document.querySelector('#primera_pelicula')
+
+          //2. Les coloco la info adentro de cada elemento.
+          nombre.innerHTML = persona.name
+          altura.innerHTML = persona.height
+          planeta_natal.innerHTML = planeta.name
+          primera_pelicula.innerHTML = pelicula.title
         }
 
-        /* const form = document.querySelector('#form-personaje') */
-        /* form.addEventListener('') */
+
 
     </script>
   </body>
